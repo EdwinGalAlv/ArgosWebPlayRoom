@@ -1,0 +1,66 @@
+﻿@page "/cdatagrid"
+@using ArgosWebPlayRoom.Components
+@using MudBlazor
+@using MudExRichTextEditor
+
+<h3>CDataGrid</h3>
+
+<CustomDataGrid T="YourDataType" Items="yourDataItems" SelectedRow="selectedItem" SelectedRowChanged="OnSelectedItemChanged" RowClick="OnRowClick">
+    <Columns>
+        <PropertyColumn T="YourDataType" TProperty="string" Property="x => x.Property1" Title="Propiedad 1" />
+        <PropertyColumn T="YourDataType" TProperty="string" Property="x => x.Property2" Title="Propiedad 2" />
+    </Columns>
+</CustomDataGrid>
+
+
+
+<MudExRichTextEdit @ref="@Editor"
+                   ReadOnly="@_readOnly"
+                   Height="444"
+                   Class="m-2"
+                   Placeholder="Edit html"
+                   
+>
+			 
+</MudExRichTextEdit>
+
+@code {	
+    bool _readOnly = false;
+	MudExRichTextEdit Editor;	
+}
+
+<style>
+    .selected-row {
+        background-color: #d3d3d3; /* Color de fondo para la fila seleccionada */
+    }
+</style>
+
+@code {
+    private YourDataType selectedItem;
+    private List<YourDataType> yourDataItems = new List<YourDataType>
+    {
+        new YourDataType { Id = 1, Property1 = "Dato 1", Property2 = "Valor 1" },
+        new YourDataType { Id = 2, Property1 = "Dato 2", Property2 = "Valor 2" },
+        new YourDataType { Id = 3, Property1 = "Dato 3", Property2 = "Valor 3" },
+        new YourDataType { Id = 4, Property1 = "Dato 4", Property2 = "Valor 4" },
+        new YourDataType { Id = 5, Property1 = "Dato 5", Property2 = "Valor 5" }
+    };
+
+    private void OnSelectedItemChanged(YourDataType item)
+    {
+        selectedItem = item;
+    }
+
+    private void OnRowClick(DataGridRowClickEventArgs<YourDataType> args)
+    {
+        selectedItem = args.Item;
+        StateHasChanged();
+    }
+
+    public class YourDataType
+    {
+        public int Id { get; set; }
+        public string Property1 { get; set; }
+        public string Property2 { get; set; }
+    }
+}

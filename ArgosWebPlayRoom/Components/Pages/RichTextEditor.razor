@@ -1,0 +1,125 @@
+﻿@page "/wordEditor"
+
+@using MudBlazor
+
+
+@inject IJSRuntime JS
+
+<MudPaper Class="p-4" Style="min-height: 600px;">
+
+    <!-- Toolbar -->
+    <div class="toolbar mb-4" style="display:flex;flex-wrap:wrap;gap:8px;">
+        <MudIconButton Icon="@Icons.Material.Filled.FormatBold" OnClick="@(() => ApplyCommand("bold"))" />
+        <MudIconButton Icon="@Icons.Material.Filled.FormatItalic" OnClick="@(() => ApplyCommand("italic"))" />
+        <MudIconButton Icon="@Icons.Material.Filled.FormatUnderlined" OnClick="@(() => ApplyCommand("underline"))" />
+        <MudIconButton Icon="@Icons.Material.Filled.FormatStrikethrough" OnClick="@(() => ApplyCommand("strikeThrough"))" />
+        
+        <!-- Fuente -->
+        <!-- Selector de Fuente usando una lista -->
+        <MudSelect T="string" Label="Fuente" Dense Class="mr-2" Style="width: 150px;" @bind-Value="SelectedFont">
+            @foreach (var font in Fonts)
+            {
+                <MudSelectItem Value="@font">@font</MudSelectItem>
+            }
+        </MudSelect>
+        
+        <!-- Tamaño -->
+        <MudSelect T="string" Label="Tamaño" @bind-Value="_selectedFontSize">
+            @* <MudSelectItem Value="12">12</MudSelectItem> *@
+            @* <MudSelectItem Value="16">16</MudSelectItem> *@
+            @* <MudSelectItem Value="20">20</MudSelectItem> *@
+            @* <MudSelectItem Value="24">24</MudSelectItem> *@
+        </MudSelect>
+
+        <!-- Color -->
+        <MudColorPicker @bind-Color="_selectedColor" Label="Color" />
+
+        <!-- Botón Imagen -->
+        <MudButton Variant="Variant.Outlined" OnClick="TriggerImageUpload">Subir Imagen</MudButton>
+        
+        <input hidden type="file" @ref="fileInput" @onchange="HandleFileSelected" />
+    </div>
+
+    <!-- Área Editable -->
+    <div id="editor"
+         class="editor p-3"
+         style="border: 1px solid #ccc; min-height:400px;"
+         contenteditable="true">
+    </div>
+
+    <MudDivider Class="my-4" />
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveContent">Guardar HTML</MudButton>
+
+</MudPaper>
+
+@code {
+    private string _selectedFont = "Arial";
+    private string _selectedFontSize = "16px";
+    // private MudColor _selectedColor = new MudColor("#000000");
+    private Color _selectedColor = new Color ();
+
+    private ElementReference fileInput;
+
+    private async Task ApplyCommand(string command)
+    {
+        await JS.InvokeVoidAsync("richTextEditor.applyStyle", command);
+    }
+
+    private async Task TriggerImageUpload()
+    {
+        await fileInput.FocusAsync();
+        // await JS.InvokeVoidAsync("document.getElementById", fileInput.Id).InvokeVoidAsync("click");
+        await JS.InvokeVoidAsync("richTextEditor.applyStyle", "bold");
+
+    }
+
+    private async Task HandleFileSelected(ChangeEventArgs e)
+    {
+        // Aquí luego codificamos para subir la imagen y pegarla al editor
+    }
+
+    private async Task SaveContent()
+    {
+        var content = await JS.InvokeAsync<string>("richTextEditor.getContent", "editor");
+        Console.WriteLine(content); // Puedes mandarlo a guardar
+    }
+}
+
+
+@code {
+    List<string> Fonts = new List<string>
+    {
+        "Arial",
+        "Calibri",
+        "Times New Roman",
+        "Verdana",
+        "Georgia",
+        "Courier New",
+        "Trebuchet MS",
+        "Comic Sans MS"
+    };
+
+    string SelectedFont = "Arial"; // Valor por defecto
+    int SelectedFontSize = 12;
+
+    void Toggle(string action)
+    {
+        Console.WriteLine($"Toggle {action} activado");
+    }
+
+    void ChangeTextColor(string color)
+    {
+        Console.WriteLine($"Color de texto cambiado a: {color}");
+    }
+
+    void ChangeHighlightColor(string color)
+    {
+        Console.WriteLine($"Color de resaltado cambiado a: {color}");
+    }
+
+    void ClearFormatting()
+    {
+        Console.WriteLine("Formato limpiado");
+    }
+}

@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
+@* <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode" /> *@
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode" />
 <MudPopoverProvider />
 <MudDialogProvider />
@@ -29,7 +30,7 @@
 
 @code {
     private bool _drawerOpen = true;
-    private bool _isDarkMode = true;
+    private bool _isDarkMode = false;
     private MudTheme? _theme = null;
 
     protected override void OnInitialized()

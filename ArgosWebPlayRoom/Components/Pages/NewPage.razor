@@ -1,0 +1,96 @@
+﻿@* @page "/Editor" *@
+
+@using BlazorMonaco
+@using BlazorMonaco.Editor
+@using BlazorMonaco.Languages
+@using MudBlazor.Extensions
+@using Nextended.Core.Helper
+@using BlazorJS
+@using MudBlazor.Extensions.Helper
+
+@* <PageTitle>Counter</PageTitle> *@
+
+@* <MudText Typo="Typo.h3" GutterBottom="true">Counter</MudText> *@
+
+@* <MudText Typo="Typo.body1" Class="mb-4">Current count: @currentCount</MudText> *@
+
+@* <MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCount">Click me</MudButton> *@
+
+<MudExStructuredDataEditor FormStyle="width: 100%" FormatJson="true"
+                           DataChanged="@OnDataStringChanged" OnValidSubmit="@OnSaveClick" ShowCancelButton="false"
+                           ShowSaveButton="true" DataType="@_dataType" Data="@_dataString"></MudExStructuredDataEditor>
+
+<style>
+    .editor-container {
+        height: 500px;
+        width: 100%;
+    }
+
+    .monaco-editor {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+
+<div class="editor-container">
+    <StandaloneCodeEditor Id="my-code-editor" ConstructionOptions="EditorConstructionOptions" CssClass="monaco-editor" />
+    <StandaloneDiffEditor CssClass="monaco-editor" />
+</div>
+
+@code {
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+            {
+                AutomaticLayout = true,
+                Language = "json",
+                Value = _dataString
+            };
+    }
+
+    private string _dataString = @"{
+        ""glossary"": {
+            ""title"": ""example glossary"",
+            ""GlossDiv"": {
+                ""title"": ""S"",
+                ""GlossList"": {
+                    ""GlossEntry"": {
+                        ""ID"": ""SGML"",
+                        ""SortAs"": ""SGML"",
+                        ""GlossTerm"": ""Standard Generalized Markup Language"",
+                        ""Acronym"": ""SGML"",
+                        ""Abbrev"": ""ISO 8879:1986"",
+                        ""GlossDef"": {
+                            ""para"": ""A meta-markup language, used to create markup languages such as DocBook."",
+                            ""GlossSeeAlso"": [""GML"", ""XML""]
+                        },
+                        ""GlossSee"": ""markup""
+                    }
+                }
+            }
+        }
+    }";
+
+    private StructuredDataType _dataType = StructuredDataType.Json;
+
+    private async Task OnDataStringChanged(string newData)
+    {
+        _dataString = newData;
+        // await _editor.SetValue(_dataString);
+    }
+
+    private async Task OnSaveClick(EditContext context)
+    {
+        // Implementa la lógica de guardado aquí
+        // await JsRuntime.InvokeVoidAsync("alert", "Datos guardados: " + _dataString);
+    }
+
+    private StandaloneCodeEditor _editor;
+
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

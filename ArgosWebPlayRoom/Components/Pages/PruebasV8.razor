@@ -1,0 +1,49 @@
+﻿@page "/PruebaV8"
+
+<MudSelect T="string" Label="Selecciona un valor" @bind-Value="_selectedValue" MultiSelection=true>
+    @foreach (var item in _options)
+    {
+        <MudSelectItem Value="@item">@item</MudSelectItem>
+    }
+</MudSelect>
+
+<p>Valor seleccionado: @_selectedValue</p>
+
+@code {
+    private string _selectedValue;
+    private List<string> _options = new List<string>
+    {
+        "Argentina",
+        "Argelia",
+        "Alemania",
+        "Angola",
+        "Antigua y Barbuda",
+        "Arabia Saudita",
+        "Argelia",
+        "Australia",
+        "Austria",
+        "Azerbaiyán",
+        "Bahamas",
+        "Bahrein",
+        "Bangladés",
+        "Barbados",
+        "Bélgica",
+        "Belice",
+        "Benín",
+        "Bielorrusia",
+        "Birmania",
+        "Bolivia",
+        "Bosnia y Herzegovina",
+        "Botsuana",
+        "Brasil",
+        "Brunéi",
+        "Bulgaria", 
+        "Burkina Faso",
+        "Burundi",
+        "Cabo Verde",
+        "Camboya",
+        "Camerún",
+        "Canadá",
+        "Catar"
+    };
+}

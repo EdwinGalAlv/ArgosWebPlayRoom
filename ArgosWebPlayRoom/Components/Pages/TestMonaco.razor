@@ -1,0 +1,86 @@
+﻿@page "/Editor"
+
+@using BlazorMonaco
+@using BlazorMonaco.Editor
+@using BlazorMonaco.Languages
+@using MudBlazor
+@using MudBlazor.Extensions
+@using Nextended.Core.Helper
+@using BlazorJS
+@using MudBlazor.Extensions.Helper
+
+<style>
+    .editor-container {
+        height: 500px;
+        width: 100%;
+    }
+
+    .monaco-editor {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+
+<MudSwitch @bind-Value="_showEditor" Color="Color.Primary" Label="Mostrar Editor" />
+
+@if (_showEditor)
+{
+    <div class="editor-container">
+        <StandaloneCodeEditor Id="my-code-editor" ConstructionOptions="EditorConstructionOptions" CssClass="monaco-editor" @ref="_editor" OnDidChangeModelContent="OnEditorContentChanged" />
+    </div>
+}
+else
+{
+    <MudTextField @bind-Value="_dataString" Label="Texto" Lines="10" FullWidth="true" OnBlur="OnTextFieldBlur" />
+}
+
+@code {
+    private bool _showEditor = false;
+    private StandaloneCodeEditor _editor;
+
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Language = "json",
+            Value = _dataString
+        };
+    }
+
+    private string _dataString = @"{
+        ""glossary"": {
+            ""title"": ""example glossary"",
+            ""GlossDiv"": {
+                ""title"": ""S"",
+                ""GlossList"": {
+                    ""GlossEntry"": {
+                        ""ID"": ""SGML"",
+                        ""SortAs"": ""SGML"",
+                        ""GlossTerm"": ""Standard Generalized Markup Language"",
+                        ""Acronym"": ""SGML"",
+                        ""Abbrev"": ""ISO 8879:1986"",
+                        ""GlossDef"": {
+                            ""para"": ""A meta-markup language, used to create markup languages such as DocBook."",
+                            ""GlossSeeAlso"": [""GML"", ""XML""]
+                        },
+                        ""GlossSee"": ""markup""
+                    }
+                }
+            }
+        }
+    }";
+
+    private async Task OnEditorContentChanged()
+    {
+        _dataString = await _editor.GetValue();
+    }
+
+    private void OnTextFieldBlur()
+    {
+        if (_editor != null)
+        {
+            _editor.SetValue(_dataString);
+        }
+    }
+}
