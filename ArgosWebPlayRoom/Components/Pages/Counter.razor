@@ -44,10 +44,10 @@
 }
 
 @code {
-    private int currentCount = 0;
+    private int currentCount = 5;
 
     private void IncrementCount()
     {
-        currentCount++;
+        currentCount = currentCount + currentCount++;
     }
 }
